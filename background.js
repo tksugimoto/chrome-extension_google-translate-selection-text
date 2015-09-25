@@ -31,8 +31,7 @@ function openGoogleTranslatePage(word, options){
                 url: url
             };
             if (options.tab) {
-                // 新しいタブは親ページのひとつ右で開く
-                createProperties.index = options.tab.index + 1;
+                createProperties.openerTabId = options.tab.id;
             }
             chrome.tabs.create(createProperties);
         }
