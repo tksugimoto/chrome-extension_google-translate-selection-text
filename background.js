@@ -1,11 +1,16 @@
 
 var ID_TRANSLATE_BY_GOOGLE = "translate-by-google";
 
-chrome.contextMenus.create({
-    title: "選択文字をgoogle翻訳",
-    contexts: ["selection"],
-    id: ID_TRANSLATE_BY_GOOGLE
-});
+function createContextMenus() {
+    chrome.contextMenus.create({
+        title: "選択文字をgoogle翻訳",
+        contexts: ["selection"],
+        id: ID_TRANSLATE_BY_GOOGLE
+    });
+}
+
+chrome.runtime.onInstalled.addListener(createContextMenus);
+chrome.runtime.onStartup.addListener(createContextMenus);
 
 chrome.contextMenus.onClicked.addListener(function (info, tab) {
     if (info.menuItemId === ID_TRANSLATE_BY_GOOGLE) {
