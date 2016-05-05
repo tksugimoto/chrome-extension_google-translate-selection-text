@@ -1,7 +1,14 @@
+
+var ID_TRANSLATE_BY_GOOGLE = "translate-by-google";
+
 chrome.contextMenus.create({
     title: "選択文字をgoogle翻訳",
     contexts: ["selection"],
-    onclick: function(info, tab) {
+    id: ID_TRANSLATE_BY_GOOGLE
+});
+
+chrome.contextMenus.onClicked.addListener(function (info, tab) {
+    if (info.menuItemId === ID_TRANSLATE_BY_GOOGLE) {
         // 文単位で改行する
         var word = info.selectionText.replace(/([.]"?) +(?=[A-Z])/g, "$1\n\n");
         openGoogleTranslatePage(word, {
