@@ -22,6 +22,22 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
     }
 });
 
+chrome.browserAction.onClicked.addListener(function(tab) {
+	var textarea = document.createElement("textarea");
+	document.body.appendChild(textarea);
+	textarea.focus();
+	document.execCommand("Paste", null, null);
+
+	// 文単位で改行する
+	var word = textarea.value.replace(/([.]"?) +(?=[A-Z])/g, "$1\n\n");
+
+	openGoogleTranslatePage(word, {
+		openSameWindow: true
+	});
+	
+	document.body.removeChild(textarea);
+});
+
 function openGoogleTranslatePage(word, options){
     if (!options) options = {};
     var openSameWindow = options.openSameWindow;
