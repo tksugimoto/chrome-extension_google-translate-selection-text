@@ -14,8 +14,7 @@ chrome.runtime.onStartup.addListener(createContextMenus);
 
 chrome.contextMenus.onClicked.addListener(function (info, tab) {
     if (info.menuItemId === ID_TRANSLATE_BY_GOOGLE) {
-        // 文単位で改行する
-        var word = info.selectionText.replace(/([.]"?) +(?=[A-Z])/g, "$1\n\n");
+        var word = info.selectionText;
         openGoogleTranslatePage(word, {
             tab: tab
         });
@@ -28,19 +27,20 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 	textarea.focus();
 	document.execCommand("Paste", null, null);
 
-	// 文単位で改行する
-	var word = textarea.value.replace(/([.]"?) +(?=[A-Z])/g, "$1\n\n");
+	var word = textarea.value;
 
 	openGoogleTranslatePage(word, {
 		openSameWindow: true
 	});
-	
+
 	document.body.removeChild(textarea);
 });
 
 function openGoogleTranslatePage(word, options){
     if (!options) options = {};
     var openSameWindow = options.openSameWindow;
+	// 文単位で改行する
+    word = word.replace(/([.]"?) +(?=[A-Z])/g, "$1\n\n");
     var url = "https://translate.google.co.jp/?hl=ja&q=" + encodeURIComponent(word);
     chrome.windows.get(chrome.windows.WINDOW_ID_CURRENT, function(currentWindowInfo) {
         if (!openSameWindow && currentWindowInfo.state === "normal") {
