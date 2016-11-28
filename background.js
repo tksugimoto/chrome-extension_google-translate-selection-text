@@ -58,7 +58,7 @@ function openGoogleTranslatePage(word, options){
             var createProperties = {
                 url: url
             };
-            if (options.tab) {
+            if (options.tab && options.tab.id !== chrome.tabs.TAB_ID_NONE) {
                 createProperties.openerTabId = options.tab.id;
             }
             chrome.tabs.create(createProperties);
