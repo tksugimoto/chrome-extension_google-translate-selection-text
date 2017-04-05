@@ -1,5 +1,5 @@
 
-var ID_TRANSLATE_BY_GOOGLE = "translate-by-google";
+const ID_TRANSLATE_BY_GOOGLE = "translate-by-google";
 
 function createContextMenus() {
 	chrome.contextMenus.create({
@@ -14,7 +14,7 @@ chrome.runtime.onStartup.addListener(createContextMenus);
 
 chrome.contextMenus.onClicked.addListener(function (info, tab) {
 	if (info.menuItemId === ID_TRANSLATE_BY_GOOGLE) {
-		var word = info.selectionText;
+		const word = info.selectionText;
 		openGoogleTranslatePage(word, {
 			tab: tab
 		});
@@ -22,12 +22,12 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
 });
 
 chrome.browserAction.onClicked.addListener(function(tab) {
-	var textarea = document.createElement("textarea");
+	const textarea = document.createElement("textarea");
 	document.body.appendChild(textarea);
 	textarea.focus();
 	document.execCommand("Paste", null, null);
 
-	var word = textarea.value;
+	const word = textarea.value;
 
 	openGoogleTranslatePage(word, {
 		openSameWindow: true
@@ -38,15 +38,15 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
 function openGoogleTranslatePage(word, options){
 	if (!options) options = {};
-	var openSameWindow = options.openSameWindow;
+	const openSameWindow = options.openSameWindow;
 	// 文単位で改行する
 	word = word.replace(/([.]"?) +(?=[A-Z])/g, "$1\n\n");
-	var url = "https://translate.google.co.jp/?hl=ja&q=" + encodeURIComponent(word);
+	const url = "https://translate.google.co.jp/?hl=ja&q=" + encodeURIComponent(word);
 	chrome.windows.get(chrome.windows.WINDOW_ID_CURRENT, function(currentWindowInfo) {
 		if (!openSameWindow && currentWindowInfo.state === "normal") {
-			var currentLeft = currentWindowInfo.left;
-			var currentWidth = currentWindowInfo.width;
-			var currentHeight = currentWindowInfo.height;
+			const currentLeft = currentWindowInfo.left;
+			const currentWidth = currentWindowInfo.width;
+			const currentHeight = currentWindowInfo.height;
 			chrome.windows.create({
 				url: url,
 				top: 0,
@@ -55,7 +55,7 @@ function openGoogleTranslatePage(word, options){
 				width: currentWidth
 			});
 		} else {
-			var createProperties = {
+			const createProperties = {
 				url: url
 			};
 			if (options.tab && options.tab.id !== chrome.tabs.TAB_ID_NONE) {
