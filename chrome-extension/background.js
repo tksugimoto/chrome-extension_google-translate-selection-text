@@ -36,9 +36,9 @@ chrome.browserAction.onClicked.addListener(tab => {
 	document.body.removeChild(textarea);
 });
 
-const openGoogleTranslatePage = (word, options) => {
-	if (!options) options = {};
-	const openSameWindow = options.openSameWindow;
+const openGoogleTranslatePage = (word, {
+	openSameWindow, tab
+} = {}) => {
 	// 文単位で改行する
 	word = word.replace(/([.]"?) +(?=[A-Z])/g, "$1\n\n");
 	const url = "https://translate.google.co.jp/?hl=ja&q=" + encodeURIComponent(word);
@@ -58,8 +58,8 @@ const openGoogleTranslatePage = (word, options) => {
 			const createProperties = {
 				url: url
 			};
-			if (options.tab && options.tab.id !== chrome.tabs.TAB_ID_NONE) {
-				createProperties.openerTabId = options.tab.id;
+			if (tab && tab.id !== chrome.tabs.TAB_ID_NONE) {
+				createProperties.openerTabId = tab.id;
 			}
 			chrome.tabs.create(createProperties);
 		}
