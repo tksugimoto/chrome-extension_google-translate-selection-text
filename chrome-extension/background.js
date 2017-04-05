@@ -21,7 +21,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 	}
 });
 
-chrome.browserAction.onClicked.addListener(tab => {
+const getClipboardText = () => {
 	const textarea = document.createElement("textarea");
 	document.body.appendChild(textarea);
 	textarea.focus();
@@ -29,11 +29,17 @@ chrome.browserAction.onClicked.addListener(tab => {
 
 	const word = textarea.value;
 
+	document.body.removeChild(textarea);
+
+	return word;
+};
+
+chrome.browserAction.onClicked.addListener(tab => {
+	const word = getClipboardText();
+
 	openGoogleTranslatePage(word, {
 		openSameWindow: true
 	});
-
-	document.body.removeChild(textarea);
 });
 
 const openGoogleTranslatePage = (word, {
