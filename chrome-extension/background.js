@@ -1,7 +1,7 @@
 
 const ID_TRANSLATE_BY_GOOGLE = "translate-by-google";
 
-const createContextMenus = () => {
+const createContextMenu = () => {
 	chrome.contextMenus.create({
 		title: "選択文字をgoogle翻訳",
 		contexts: ["selection"],
@@ -9,8 +9,8 @@ const createContextMenus = () => {
 	});
 };
 
-chrome.runtime.onInstalled.addListener(createContextMenus);
-chrome.runtime.onStartup.addListener(createContextMenus);
+chrome.runtime.onInstalled.addListener(createContextMenu);
+chrome.runtime.onStartup.addListener(createContextMenu);
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
 	if (info.menuItemId === ID_TRANSLATE_BY_GOOGLE) {
