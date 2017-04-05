@@ -1,18 +1,18 @@
 
 const ID_TRANSLATE_BY_GOOGLE = "translate-by-google";
 
-function createContextMenus() {
+const createContextMenus = () => {
 	chrome.contextMenus.create({
 		title: "選択文字をgoogle翻訳",
 		contexts: ["selection"],
 		id: ID_TRANSLATE_BY_GOOGLE
 	});
-}
+};
 
 chrome.runtime.onInstalled.addListener(createContextMenus);
 chrome.runtime.onStartup.addListener(createContextMenus);
 
-chrome.contextMenus.onClicked.addListener(function (info, tab) {
+chrome.contextMenus.onClicked.addListener((info, tab) => {
 	if (info.menuItemId === ID_TRANSLATE_BY_GOOGLE) {
 		const word = info.selectionText;
 		openGoogleTranslatePage(word, {
@@ -21,7 +21,7 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
 	}
 });
 
-chrome.browserAction.onClicked.addListener(function(tab) {
+chrome.browserAction.onClicked.addListener(tab => {
 	const textarea = document.createElement("textarea");
 	document.body.appendChild(textarea);
 	textarea.focus();
@@ -36,13 +36,13 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 	document.body.removeChild(textarea);
 });
 
-function openGoogleTranslatePage(word, options){
+const openGoogleTranslatePage = (word, options) => {
 	if (!options) options = {};
 	const openSameWindow = options.openSameWindow;
 	// 文単位で改行する
 	word = word.replace(/([.]"?) +(?=[A-Z])/g, "$1\n\n");
 	const url = "https://translate.google.co.jp/?hl=ja&q=" + encodeURIComponent(word);
-	chrome.windows.get(chrome.windows.WINDOW_ID_CURRENT, function(currentWindowInfo) {
+	chrome.windows.get(chrome.windows.WINDOW_ID_CURRENT, currentWindowInfo => {
 		if (!openSameWindow && currentWindowInfo.state === "normal") {
 			const currentLeft = currentWindowInfo.left;
 			const currentWidth = currentWindowInfo.width;
@@ -64,4 +64,4 @@ function openGoogleTranslatePage(word, options){
 			chrome.tabs.create(createProperties);
 		}
 	});
-}
+};
