@@ -34,7 +34,7 @@ const getClipboardText = () => {
 	return clipboardText;
 };
 
-chrome.browserAction.onClicked.addListener(tab => {
+chrome.browserAction.onClicked.addListener(() => {
 	const clipboardText = getClipboardText();
 
 	openGoogleTranslatePage(clipboardText, {
