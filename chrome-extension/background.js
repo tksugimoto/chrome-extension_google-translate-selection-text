@@ -48,15 +48,7 @@ const openGoogleTranslatePage = (word, {
 	// 文単位で改行する
 	word = word.replace(/([.]"?) +(?=[A-Z])/g, "$1\n\n");
 
-	const queryObject = {
-		hl: "ja",
-		q: word
-	};
-	const querys = Object.entries(queryObject).map(([key, value]) => {
-		return `${key}=${encodeURIComponent(value)}`;
-	});
-	const queryString = querys.join("&");
-	const url = `https://translate.google.co.jp/?${queryString}`;
+	const url = generateGoogleTranslatePageUrl(word);
 
 	chrome.windows.get(chrome.windows.WINDOW_ID_CURRENT, currentWindowInfo => {
 		if (!openSameWindow && currentWindowInfo.state === "normal") {
@@ -80,4 +72,18 @@ const openGoogleTranslatePage = (word, {
 			chrome.tabs.create(createProperties);
 		}
 	});
+};
+
+const generateGoogleTranslatePageUrl = translateText => {
+	const queryObject = {
+		hl: "ja",
+		q: translateText
+	};
+	const querys = Object.entries(queryObject).map(([key, value]) => {
+		return `${key}=${encodeURIComponent(value)}`;
+	});
+	const queryString = querys.join("&");
+	const url = `https://translate.google.co.jp/?${queryString}`;
+
+	return url;
 };
