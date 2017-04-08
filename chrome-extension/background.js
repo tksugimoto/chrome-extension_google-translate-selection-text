@@ -14,9 +14,9 @@ chrome.runtime.onStartup.addListener(createContextMenu);
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
 	if (info.menuItemId === ID_TRANSLATE_BY_GOOGLE) {
-		const word = info.selectionText;
-		openGoogleTranslatePage(word, {
-			tab: tab
+		const selectionText = info.selectionText;
+		openGoogleTranslatePage(selectionText, {
+			currentTab: tab
 		});
 	}
 });
@@ -27,28 +27,28 @@ const getClipboardText = () => {
 	textarea.focus();
 	document.execCommand("Paste", null, null);
 
-	const word = textarea.value;
+	const clipboardText = textarea.value;
 
 	document.body.removeChild(textarea);
 
-	return word;
+	return clipboardText;
 };
 
 chrome.browserAction.onClicked.addListener(tab => {
-	const word = getClipboardText();
+	const clipboardText = getClipboardText();
 
-	openGoogleTranslatePage(word, {
+	openGoogleTranslatePage(clipboardText, {
 		openSameWindow: true
 	});
 });
 
-const openGoogleTranslatePage = (word, {
-	openSameWindow, tab
+const openGoogleTranslatePage = (text, {
+	openSameWindow, currentTab
 } = {}) => {
 	// 文単位で改行する
-	word = word.replace(/([.]"?) +(?=[A-Z])/g, "$1\n\n");
+	text = text.replace(/([.]"?) +(?=[A-Z])/g, "$1\n\n");
 
-	const url = generateGoogleTranslatePageUrl(word);
+	const url = generateGoogleTranslatePageUrl(text);
 
 	chrome.windows.get(chrome.windows.WINDOW_ID_CURRENT, currentWindowInfo => {
 		if (!openSameWindow && currentWindowInfo.state === "normal") {
@@ -66,18 +66,18 @@ const openGoogleTranslatePage = (word, {
 			const createProperties = {
 				url: url
 			};
-			if (tab && tab.id !== chrome.tabs.TAB_ID_NONE) {
-				createProperties.openerTabId = tab.id;
+			if (currentTab && currentTab.id !== chrome.tabs.TAB_ID_NONE) {
+				createProperties.openerTabId = currentTab.id;
 			}
 			chrome.tabs.create(createProperties);
 		}
 	});
 };
 
-const generateGoogleTranslatePageUrl = translateText => {
+const generateGoogleTranslatePageUrl = text => {
 	const queryObject = {
 		hl: "ja",
-		q: translateText
+		q: text
 	};
 	const querys = Object.entries(queryObject).map(([key, value]) => {
 		return `${key}=${encodeURIComponent(value)}`;
