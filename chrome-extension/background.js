@@ -47,7 +47,17 @@ const openGoogleTranslatePage = (word, {
 } = {}) => {
 	// 文単位で改行する
 	word = word.replace(/([.]"?) +(?=[A-Z])/g, "$1\n\n");
-	const url = "https://translate.google.co.jp/?hl=ja&q=" + encodeURIComponent(word);
+
+	const queryObject = {
+		hl: "ja",
+		q: word
+	};
+	const querys = Object.entries(queryObject).map(([key, value]) => {
+		return `${key}=${encodeURIComponent(value)}`;
+	});
+	const queryString = querys.join("&");
+	const url = `https://translate.google.co.jp/?${queryString}`;
+
 	chrome.windows.get(chrome.windows.WINDOW_ID_CURRENT, currentWindowInfo => {
 		if (!openSameWindow && currentWindowInfo.state === "normal") {
 			const currentLeft = currentWindowInfo.left;
