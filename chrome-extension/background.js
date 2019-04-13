@@ -3,7 +3,7 @@ const ID_TRANSLATE_BY_GOOGLE = "translate-by-google";
 
 const createContextMenu = () => {
 	chrome.contextMenus.create({
-		title: "選択文字をgoogle翻訳",
+		title: "Translate selected characters (選択文字をgoogle翻訳)",
 		contexts: ["selection"],
 		id: ID_TRANSLATE_BY_GOOGLE
 	});
