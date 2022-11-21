@@ -1,11 +1,17 @@
 
 const ID_TRANSLATE_BY_GOOGLE = "translate-by-google";
+const ID_TRANSLATE_CODE_COMMENT_BY_GOOGLE = "translate-code-comment-by-google";
 
 const createContextMenu = () => {
 	chrome.contextMenus.create({
 		title: "Translate selected characters (選択文字をgoogle翻訳)",
 		contexts: ["selection"],
 		id: ID_TRANSLATE_BY_GOOGLE
+	});
+	chrome.contextMenus.create({
+		title: "コードコメントをGoogle翻訳",
+		contexts: ["browser_action"],
+		id: ID_TRANSLATE_CODE_COMMENT_BY_GOOGLE
 	});
 };
 
@@ -17,6 +23,16 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 		const selectionText = info.selectionText;
 		openGoogleTranslatePage(selectionText, {
 			currentTab: tab
+		});
+	}
+	if (info.menuItemId === ID_TRANSLATE_CODE_COMMENT_BY_GOOGLE) {
+		const clipboardText = getClipboardText();
+		const formedText = clipboardText
+			.replace(/^\s*(#|\/\/)/mg, '') // コメント記号を削除
+			.replace(/\n/g, ' ') // 改行を削除(openGoogleTranslatePage 関数側で単一行の文章は整形される)
+			;
+		openGoogleTranslatePage(formedText, {
+			openSameWindow: true
 		});
 	}
 });
