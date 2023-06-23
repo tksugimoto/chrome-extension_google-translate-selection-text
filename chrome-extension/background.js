@@ -61,6 +61,7 @@ chrome.browserAction.onClicked.addListener(() => {
 const openGoogleTranslatePage = (text, {
 	openSameWindow, currentTab
 } = {}) => {
+	text = text.replace(/ {2,}/g, ' '); // 過剰なスペースを除去する
 	// 文単位で改行する
 	text = text.replace(/([.]"?) +(?=[A-Z])/g, "$1\n\n");
 
